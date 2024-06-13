@@ -108,7 +108,18 @@ function ReviewHighlighter({ review }) {
   analytics.forEach((analytic, idx) => {
     const highlights = analytic.highlight_indices;
     highlights.forEach((indices) => {
-      const [start, end, sentiment] = indices;
+      let [start, end, sentiment] = indices;
+      if(start<0){
+        start = 1;
+      }
+      if(end>review.content.length){
+        end = (review.content.length) -1;;
+      }
+      if(start>end){
+        return(
+          <div>{review.content}</div>
+        )
+      }
       const category = analytic.category || 'Unknown';
       let color;
       switch (sentiment) {
@@ -129,7 +140,7 @@ function ReviewHighlighter({ review }) {
       }
       segment.push(content.slice(lastIndex, start));
       segment.push(
-        <Tooltip key={`${idx}`} category={category} segment={content.slice(start, end)} color={color} />
+        <Tooltip key={`${idx} `} category={category} segment={content.slice(start, end)} color={color} />
       );
       lastIndex = end;
     });
